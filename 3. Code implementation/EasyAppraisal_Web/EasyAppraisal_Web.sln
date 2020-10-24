@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAppraisal_Web", "EasyAppraisal_Web\EasyAppraisal_Web.csproj", "{6A53942B-F9CC-423C-9127-9ACFFF125EB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAppraisal_Web", "EasyAppraisal_Web\EasyAppraisal_Web.csproj", "{F50304D9-17F5-4534-B0E5-D340B5DA2367}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6A53942B-F9CC-423C-9127-9ACFFF125EB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A53942B-F9CC-423C-9127-9ACFFF125EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A53942B-F9CC-423C-9127-9ACFFF125EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A53942B-F9CC-423C-9127-9ACFFF125EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F50304D9-17F5-4534-B0E5-D340B5DA2367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F50304D9-17F5-4534-B0E5-D340B5DA2367}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F50304D9-17F5-4534-B0E5-D340B5DA2367}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F50304D9-17F5-4534-B0E5-D340B5DA2367}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DF92A5EE-94A7-4C58-9C38-5FD9BB522930}
+		SolutionGuid = {E472B322-4CFA-499B-BD26-8EE3DB4552A6}
 	EndGlobalSection
 EndGlobal

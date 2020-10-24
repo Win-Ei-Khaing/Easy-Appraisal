@@ -1,8 +1,35 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
     ViewData["Title"] = "Home Page";
+    var userCode = HttpContextAccessor.HttpContext.Session.GetString("UserCode");
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<div id="divBody" style="padding-left:70px"></div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $('document').ready(function () {
+        var userData = {
+                'UserCode': '@userCode'
+            };
+        $.ajax({
+            url: 'https://localhost:44341/api/usermark/GetOwnedMark',
+            type: 'POST',
+            data: userData,
+            dataType: 'json',
+            success: function (result) {
+                //alert(result.responseCode);
+                var row = "";
+                if (result.responseCode == 0) {
+                    for (var i = 0; i < result.responseUserMarkModel.length; i++) {
+                        row += "<button type='button' class='btn btn-dark'>" + result.responseUserMarkModel[i].categoryName + "<br />" + result.responseUserMarkModel[i].mark + "</button>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n";
+                    }
+                    $("#divBody").append(row);
+                }
+                else
+                    alert(result.responseMessage);
+            }
+        });
+    });
+</script>

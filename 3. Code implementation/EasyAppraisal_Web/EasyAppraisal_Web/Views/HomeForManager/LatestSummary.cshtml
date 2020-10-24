@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Latest Summary";
+}
+<style>
+    #tblSummary tr:nth-child(even) {
+        background-color: #E5E5E5;
+    }
+</style>
+
+<table id="tblSummary">
+    <thead>
+        <tr id="header">
+        </tr>
+    </thead>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: 'https://localhost:44341/api/usermark/GetLatestSummary',
+            type: 'GET',
+            dataType: 'json',
+            success: function (result) {
+                //declare dynamic tabel headers
+                var header = "<th>SN</th><th>User Name</th>";
+                if (result.responseCode == 0) {
+                    var categoryNames = result.responseLatestSummaryModel.categoryNames;
+                    //alert(categoryNames.length);
+                    for (var i = 0; i < categoryNames.length; i++) {
+                        //alert(categoryNames[i]);
+                        header += "<th>" + categoryNames[i] +"</th>";
+                    }
+                    $("#header").append(header);
+
+                    //add table row data
+                    $('#tblSummary').DataTable({
+                        data: result.responseLatestSummaryModel.userMarks
+                    });
+
+                    $("#tblSummary tr td").not(':nth-child(2)').css({ "text-align": "center" }); 
+                }
+                else
+                    alert(result.responseMessage);
+            }
+        });
+    });
+    //$('#tblSummary').dataTable(
+    //    {
+    //        ajax: {
+    //            url: 'https://localhost:44341/api/usermark/GetLatestSummary',
+    //            dataSrc: function (json) {
+    //                // Settings.  
+    //                jsonObj = $.parseJSON(json.data)
+    //                alert(jsonObj.data.userNames.length);
+    //                // Data  
+    //                return jsonObj.data;
+    //            }  
+    //        },
+    //        columns: [
+    //            {
+    //                sWidth: '3%', title: 'SN', "defaultContent": '0', className: "text-center",
+    //                render: function (data, type, row, meta) {
+    //                    return meta.row + 1;
+    //                }
+    //            },
+    //            { sWidth: '5%', title: 'User Name', className: "text-center", data: 'responseLatestSummaryModel.userNames' },
+    //            { sWidth: '20%', title: 'Remark', data: 'remark' }
+    //        ]
+    //    });
+</script>

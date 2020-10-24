@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using EasyAppraisal_Web.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace EasyAppraisal_Web.Controllers
 {
@@ -18,13 +19,13 @@ namespace EasyAppraisal_Web.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string userCode)
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
+            if (userCode != null)
+            {
+                HttpContext.Session.SetString("UserCode", userCode);
+                HttpContext.Session.SetString("Position", "Non-Manager");
+            }
             return View();
         }
 

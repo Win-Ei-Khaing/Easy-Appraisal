@@ -1,0 +1,72 @@
+﻿@{    
+    ViewData["Title"] = "Login Page";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<p style="padding-top: 150px;text-align:center;font-size:x-large">Easy Appraisal</p>
+
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <div class="row">
+            <input type="text" class="form-control" id="userCode" placeholder="Enter User Code">
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <div class="row">
+            <input type="password" class="form-control" id="password" placeholder="Enter Password">
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <div class="row">
+            <button type="button" class="btn btn-dark" style="width:100%" onclick="Login()">Login</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function Login()
+    {
+        var userCode = $("#userCode").val().trim();
+        var password = $("#password").val().trim();
+        var errorMsg = "";
+        if (userCode.length == 0)
+            errorMsg += "User Code is required \r\n";
+        if (password.length == 0)
+            errorMsg += "Password is required";
+
+        if (errorMsg != "")
+            alert(errorMsg);
+        else {
+            var userData = {
+                'UserCode': userCode,
+                'Password': password
+            };
+            $.ajax({
+                url: 'https://localhost:44341/api/login/login',
+                type: 'POST',
+                data: userData,
+                dataType: 'json',
+                success: function (result) {
+                    //alert(result.responseCode + "____" + result.responseMessage);
+                    if (result.responseCode == 0) {
+                        if (result.responseMessage == "Manager")
+                            window.location.href = "@Url.Action("Index", "HomeForManager", new { userCode = -1 } )".replace("-1", userCode);
+                        else
+                            window.location.href = "@Url.Action("Index", "Home", new { userCode = -1 } )".replace("-1", userCode);
+                    }
+                    else
+                        alert(result.responseMessage);
+                }
+            });
+        }
+    }
+</script>
