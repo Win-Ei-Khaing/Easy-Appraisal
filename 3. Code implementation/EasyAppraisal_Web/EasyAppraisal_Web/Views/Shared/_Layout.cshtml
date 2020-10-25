@@ -27,8 +27,11 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item"  id="managerAccess"  style="display:none">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="HomeForManager" asp-action="LatestSummary">Latest Summary</a>
+                        <li class="nav-item"  style="width:30%">
+                            <a id="managerAccess" class="nav-link text-dark" asp-area="" asp-controller="HomeForManager" asp-action="LatestSummary" style="display:none;">Latest Summary</a>
+                        </li>
+                        <li style="text-align:right;width:70%">
+                            <a  class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Log Out</a>
                         </li>
                     </ul>
                 </div>

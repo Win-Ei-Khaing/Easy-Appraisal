@@ -56,7 +56,6 @@
                 data: userData,
                 dataType: 'json',
                 success: function (result) {
-                    //alert(result.responseCode + "____" + result.responseMessage);
                     if (result.responseCode == 0) {
                         if (result.responseMessage == "Manager")
                             window.location.href = "@Url.Action("Index", "HomeForManager", new { userCode = -1 } )".replace("-1", userCode);

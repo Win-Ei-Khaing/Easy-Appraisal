@@ -11,5 +11,6 @@ namespace EasyAppraisal_Api.Models
         public string ResponseMessage { get; set; }
         public List<UserMarkModel> ResponseUserMarkModel { get; set; }
         public LatestSummaryModel ResponseLatestSummaryModel { get; set; }
+        public int ResponseAppraisalCount { get; set; }
     }
 }

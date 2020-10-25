@@ -16,7 +16,7 @@ namespace EasyAppraisal_Web.Controllers
                 HttpContext.Session.SetString("UserCode", userCode);
                 HttpContext.Session.SetString("Position", "Manager");
             }
-            return View();
+            return View("~/Views/Home/Index.cshtml");
         }
 
         public IActionResult LatestSummary()

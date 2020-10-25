@@ -22,7 +22,7 @@
             dataType: 'json',
             success: function (result) {
                 //declare dynamic tabel headers
-                var header = "<th>SN</th><th>User Name</th>";
+                var header = "<th>SN</th><th>User Name</th><th>Position</th><th>Previous Appraisal Count</th>";
                 if (result.responseCode == 0) {
                     var categoryNames = result.responseLatestSummaryModel.categoryNames;
                     //alert(categoryNames.length);
@@ -44,27 +44,4 @@
             }
         });
     });
-    //$('#tblSummary').dataTable(
-    //    {
-    //        ajax: {
-    //            url: 'https://localhost:44341/api/usermark/GetLatestSummary',
-    //            dataSrc: function (json) {
-    //                // Settings.  
-    //                jsonObj = $.parseJSON(json.data)
-    //                alert(jsonObj.data.userNames.length);
-    //                // Data  
-    //                return jsonObj.data;
-    //            }  
-    //        },
-    //        columns: [
-    //            {
-    //                sWidth: '3%', title: 'SN', "defaultContent": '0', className: "text-center",
-    //                render: function (data, type, row, meta) {
-    //                    return meta.row + 1;
-    //                }
-    //            },
-    //            { sWidth: '5%', title: 'User Name', className: "text-center", data: 'responseLatestSummaryModel.userNames' },
-    //            { sWidth: '20%', title: 'Remark', data: 'remark' }
-    //        ]
-    //    });
 </script>

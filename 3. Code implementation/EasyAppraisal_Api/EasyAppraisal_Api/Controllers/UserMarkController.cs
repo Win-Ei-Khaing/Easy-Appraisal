@@ -28,5 +28,17 @@ namespace EasyAppraisal_Api.Controllers
         {
             return userMarkDAO.GetLatestSummary();
         }
+
+        [HttpPost]
+        public ResponseModel StartForAppraisal([FromForm] MarkHistoryModel markHistory)
+        {
+            return userMarkDAO.StartForAppraisal(markHistory.GivenOn, markHistory.UserCode);
+        }
+
+        [HttpPost]
+        public ResponseModel SaveAppraisal([FromForm] RequestModel request)
+        {
+            return userMarkDAO.SaveAppraisal(request);
+        }
     }
 }

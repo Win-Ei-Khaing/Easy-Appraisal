@@ -5,10 +5,38 @@
     var userCode = HttpContextAccessor.HttpContext.Session.GetString("UserCode");
 }
 
-<div id="divBody" style="padding-left:70px"></div>
+<style>
+    #tblAppraisal tr:nth-child(even) {
+        background-color: #E5E5E5;
+    }
+</style>
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
+<div id="divBody" style="text-align:center"></div>
+
+<div style="text-align:center">
+    <p id="appraisalCount" style="padding-top:15px;padding-bottom:15px;color:brown"></p>
+    <label class="edit_label">Please choose Datetime first before you start to make appraisal!</label>
+    <div class="row" style="padding-top:15px;padding-bottom:15px;">
+        <div class="col-4"></div>
+        <input id="appraisalDatetime" class="col-4 form-control" type="datetime-local" />
+    </div>
+    <button id="btnStartAppraisal" type='button' class='btn btn-secondary' onclick="StartAppraisal()">Start Appraisal</button>
+</div>
+
+<table id="tblAppraisal">
+    <thead>
+        <tr id="appraisalHeader">
+        </tr>
+    </thead>
+    <tbody id="appraisalBody">
+    </tbody>
+</table>
+
+<div style="text-align:center; padding-top:30px;">
+    <button id="btnSaveAppraisal" type='button' class='btn btn-dark' onclick="SaveAppraisal()" style="width:100%; display:none;">Save Appraisal</button>
+</div>
 <script>
+    var categoryCount = 0;
     $('document').ready(function () {
         var userData = {
                 'UserCode': '@userCode'
@@ -26,10 +54,155 @@
                         row += "<button type='button' class='btn btn-dark'>" + result.responseUserMarkModel[i].categoryName + "<br />" + result.responseUserMarkModel[i].mark + "</button>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n";
                     }
                     $("#divBody").append(row);
-                }
+                    if (result.responseAppraisalCount > 1)
+                        $("#appraisalCount").append("<b>You have made appraisal on other users for " + result.responseAppraisalCount + " times!</b>");
+                    else 
+                        $("#appraisalCount").append("<b>You have made appraisal on other users for " + result.responseAppraisalCount + " time!</b>");
+                    }
                 else
                     alert(result.responseMessage);
             }
         });
     });
+
+    //to prepare default marks with all users
+    function StartAppraisal() {
+        var appraisalDatetime = $("#appraisalDatetime").val().toString().trim();
+        //alert(appraisalDatetime);
+        var errorMsg = "";
+        if (appraisalDatetime.length == 0)
+            errorMsg += "Appraisal Datetime is required \r\n";
+
+        if (errorMsg != "") {
+            $("#btnSaveAppraisal").hide();
+            alert(errorMsg);
+        }
+        else {
+            $("#btnStartAppraisal").attr("disabled", "disabled");
+            $("#appraisalDatetime").attr("disabled", "disabled");
+            var postData = {
+                'givenOn': appraisalDatetime,
+                'userCode': '@userCode'
+            };
+            $.ajax({
+                url: 'https://localhost:44341/api/usermark/StartForAppraisal',
+                type: 'POST',
+                data: postData,
+                dataType: 'json',
+                success: function (result) {
+                    //clear table first
+                    $("#appraisalHeader").val('');
+                    $("#appraisalBody").val('');
+                    var header = "<th>SN</th><th style='display: none;'>User ID</th><th>User Name</th>";
+                    if (result.responseCode == 0) {
+                        categoryCount = result.responseLatestSummaryModel.categoryNames.length;
+                        for (var i = 0; i < result.responseLatestSummaryModel.categoryNames.length; i++) {
+                            header += "<th>" + result.responseLatestSummaryModel.categoryNames[i] + "</th>";
+                        }
+                        $("#appraisalHeader").append(header);
+
+                        var resultUserData = result.responseLatestSummaryModel.userMarks;
+                        for (var i = 0; i < resultUserData.length; i++) {
+                            var bodyRow = "<tr><td style='text-align:center'>"+(i+1)+"</td>";
+
+                            var rowData = resultUserData[i];
+                            bodyRow += "<td style='display: none;'>" + rowData[0] + "</td>";
+                            bodyRow += "<td>" + rowData[1] + "</td>";
+
+                            for (var j = 0; j < result.responseLatestSummaryModel.categoryNames.length; j++)
+                            {
+                                var id = rowData[0] + "_C_" + (j+1).toString();
+                                //alert(rowData[j + 2]);
+                                bodyRow += "<td id='" + id + "' class='MarkData' contenteditable='true' style='text-align:center'  onkeypress='CheckMark(event)'  onfocus='ClearOldValue(event)' onclick='ClearOldValue(event)' onmousedown='ClearOldValue(event)' onfocusout='ResetOldValue(event)' onmouseout='ResetOldValue(event)'>" + rowData[j+2] + "</td>";
+                            }
+                            bodyRow += "</tr>";
+                            $("#appraisalBody").append(bodyRow);
+                        }
+
+                        //change datatable to html table
+                        $('#tblAppraisal').DataTable({
+                        });
+                    }
+                    else
+                        alert(result.responseMessage);
+                }
+            });
+            $("#btnSaveAppraisal").show();
+        }
+    }
+
+    //to check value to be only between 0 and 5
+    function CheckMark(e) {
+        var id = $(e.target).attr("id");
+        var value = document.getElementById(id).innerHTML;
+        //alert(id + "___" + value);
+        var havingError = false;
+        if (!(e.which >= 48 && e.keyCode <= 53))
+            havingError = true;
+
+        if (!havingError) {
+            var newValue = parseInt(value + "" + String.fromCharCode(e.which));
+            if (newValue < 0 || newValue > 5)
+                    havingError = true;
+            }
+        if (havingError) {
+            alert("Please rate only between 0 and 5");
+            e.preventDefault();
+        }
+    }
+
+    var oldValue = "";
+    //to clear old data
+    function ClearOldValue(e) {
+        var id = $(e.target).attr("id");
+        oldValue = document.getElementById(id).innerHTML;
+        document.getElementById(id).innerHTML = "";
+    }
+
+    //to put old data back if there is no new data
+    function ResetOldValue(e) {
+        //alert(oldValue);
+        var id = $(e.target).attr("id");
+        var value = document.getElementById(id).innerHTML;
+        if (value.trim() == "")
+            document.getElementById(id).innerHTML = oldValue;
+    }
+
+    //to save appraisal
+    function SaveAppraisal() {
+        $("#btnSaveAppraisal").attr("disabled", "disabled");
+        if (confirm('Are you sure to save this appraisal? You can\'t change this appraisal back.')) {
+            var appraisalDatetime = $("#appraisalDatetime").val().toString().trim();
+
+            var userMarkData = new Array();
+            for (var i = 1; i < $('#tblAppraisal tr').length; i++) {
+                var userMark = new Array();
+                var userName = $("#tblAppraisal").find('tr:eq(' + i + ')').find('td:eq(' + 1 + ')').text();
+                userMark.push(userName);
+                for (var j = 0; j < categoryCount; j++)
+                {
+                    var mark = $("#tblAppraisal").find('tr:eq(' + i + ')').find('td:eq(' + (j + 3) + ')').text();
+                    userMark.push(mark);
+                }
+                userMarkData.push(userMark);
+            }
+
+            var postData = {
+                'givenOn': appraisalDatetime,
+                'givenBy': '@userCode',
+                'userMarkData': userMarkData
+            };
+            $.ajax({
+                url: 'https://localhost:44341/api/usermark/SaveAppraisal',
+                type: 'POST',
+                data: postData,
+                dataType: 'json',
+                success: function (result) {
+                    alert(result.responseMessage);
+                    if (result.responseCode == 0)
+                        window.location.reload();
+                }
+            });
+        }
+    }
 </script>

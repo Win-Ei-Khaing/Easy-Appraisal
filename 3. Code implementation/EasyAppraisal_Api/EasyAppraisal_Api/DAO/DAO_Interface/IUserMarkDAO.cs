@@ -10,5 +10,7 @@ namespace EasyAppraisal_Api.DAO.DAO_Interface
     {
         ResponseModel GetOwnedMark(string userCode); 
         ResponseModel GetLatestSummary();
+        ResponseModel StartForAppraisal(DateTime givenOn, string userCode);
+        ResponseModel SaveAppraisal(RequestModel request);
     }
 }
